@@ -104,7 +104,7 @@ class TerminalDeviceModel(models.Model):
     road_device = models.ForeignKey(RoadDeviceModel, verbose_name="所属路口设备", null=True, blank=True)
     device_type = models.CharField(max_length=20, null=True, blank=True, verbose_name='规格型号')
     device_company = models.CharField(max_length=20, null=True, blank=True, verbose_name='厂家',
-                                      choices=(('hk', '海康'), ('kd', '科达')))
+                                      choices=(('hk', '海康'), ('kd', '科达'), ('dh', '大华')))
 
     class Meta:
         verbose_name = '终端设备信息'
@@ -159,7 +159,7 @@ class CameraDeviceModel(models.Model):
 class OtherDeviceModel(models.Model):
     device_name = models.CharField(max_length=10, verbose_name="设备名称")
     device_type = models.CharField(max_length=20, verbose_name="规格型号/材料", blank=True, null=True)
-    # device_num = models.CharField(max_length=10, verbose_name="设备数量")
+    device_num = models.IntegerField(default=1, verbose_name="设备数量")
     road_device = models.ForeignKey(RoadDeviceModel, verbose_name="所属路口设备", blank=True, null=True)
 
     class Meta:

@@ -46,6 +46,7 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
         'address', 'road_code', 'device_code', 'road_type', 'wftype', 'terminal', 'camera', 'brigade',
         'build_company', 'time'
     )
+    search_fields = ['address', 'road_code']
     inlines = [CameraInline, TerminalInline, OtherInline]
 
     #  'other', 'map_img', 'img', 'longitude', 'latitude', 'owner_company',
@@ -56,7 +57,7 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
         wflist = []
         for lwf in lwfs:
             for ll in lwf:
-                print(ll)
+                # print(ll)
                 wflist.append(ll)
         return wflist[:]
 
@@ -74,19 +75,19 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
 
 
 class TerminalDeviceModelAdmin(admin.ModelAdmin):
-    list_display = ('ip', 'username', 'password', 'server', 'road_device')
+    list_display = ('ip', 'username', 'password', 'server', 'road_device', 'id')
 
 
 class CameraDeviceModelAdmin(admin.ModelAdmin):
     list_display = (
         'ip', 'port', 'local_ip', 'local_port', 'username', 'password', 'server', 'road_device', 'wf_type',
-        'device_type', 'device_company', 'terminal',
+        'device_type', 'device_company', 'terminal', 'id'
 
     )
 
 
 class OtherDeviceModelAdmin(admin.ModelAdmin):
-    list_display = ('device_name', 'device_type', 'road_device')
+    list_display = ('device_name', 'device_type', 'road_device', 'id')
 
 
 admin.site.register(WFTypeModel, WFTypeModelAdmin)

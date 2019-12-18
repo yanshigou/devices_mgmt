@@ -1,5 +1,5 @@
 #!/bin/sh
-NAME="devices_mgmt_uwsgi.ini"
+NAME="devices_mgmt_uwsgi"
 if [ ! -n "$NAME" ];then
     echo "no arguments"
     exit;
