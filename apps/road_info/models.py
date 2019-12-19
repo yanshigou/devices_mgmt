@@ -94,10 +94,7 @@ class RoadDeviceModel(models.Model):
 
 
 class TerminalDeviceModel(models.Model):
-    ip = models.CharField(max_length=15, verbose_name="应指网IP")
-    port = models.CharField(max_length=15, verbose_name="应指网端口", default='80')
-    local_ip = models.CharField(max_length=15, verbose_name="局域网IP", blank=True, null=True)
-    local_port = models.CharField(max_length=15, verbose_name="局域网端口", blank=True, null=True)
+    ip = models.CharField(max_length=30, verbose_name="IP地址", unique=True)
     username = models.CharField(max_length=20, verbose_name="用户名", blank=True, null=True, default="admin")
     password = models.CharField(max_length=20, verbose_name="密码", blank=True, null=True, default="hik12345")
     server = models.ForeignKey(ServerModel, verbose_name="接入服务器", null=True, blank=True)
@@ -109,16 +106,15 @@ class TerminalDeviceModel(models.Model):
     class Meta:
         verbose_name = '终端设备信息'
         verbose_name_plural = verbose_name
-        unique_together = ("ip", "port")
 
     def __str__(self):
-        return self.ip + ":" + self.port
+        return self.ip
 
 
 wf_types = (('13443', '违反禁令标志'),
             ('13011', '逆行'),
             ('13452', '违反禁止标线'),
-            ('13452', '违反禁止停车标线'),
+            ('13453', '违反禁止停车标线'),
             ('10192', '违反规定使用专用车道'),
             ('16250', '违反交通信号灯'),
             ('12082', '不按导向车道行驶'),
@@ -132,10 +128,7 @@ wf_types = (('13443', '违反禁令标志'),
 
 
 class CameraDeviceModel(models.Model):
-    ip = models.CharField(max_length=15, verbose_name="应指网IP")
-    port = models.CharField(max_length=15, verbose_name="应指网端口", default='80')
-    local_ip = models.CharField(max_length=15, verbose_name="局域网IP", blank=True, null=True)
-    local_port = models.CharField(max_length=15, verbose_name="局域网端口", blank=True, null=True)
+    ip = models.CharField(max_length=30, verbose_name="IP地址", unique=True)
     username = models.CharField(max_length=20, verbose_name="用户名", blank=True, null=True, default="admin")
     password = models.CharField(max_length=20, verbose_name="密码", blank=True, null=True, default="hik12345")
     server = models.ForeignKey(ServerModel, verbose_name="接入服务器", null=True, blank=True)
@@ -150,10 +143,9 @@ class CameraDeviceModel(models.Model):
     class Meta:
         verbose_name = '摄像机设备信息'
         verbose_name_plural = verbose_name
-        unique_together = ("ip", "port")
 
     def __str__(self):
-        return self.ip + ":" + self.port
+        return self.ip
 
 
 class OtherDeviceModel(models.Model):

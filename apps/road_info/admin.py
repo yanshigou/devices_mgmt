@@ -46,10 +46,12 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
         'address', 'road_code', 'device_code', 'road_type', 'wftype', 'terminal', 'camera', 'brigade',
         'build_company', 'time'
     )
-    search_fields = ['address', 'road_code']
+    list_filter = ('road_type', 'build_company')
+    search_fields = ['address', 'road_code', 'cameradevicemodel__ip', 'terminaldevicemodel__ip']
+
     inlines = [CameraInline, TerminalInline, OtherInline]
 
-    #  'other', 'map_img', 'img', 'longitude', 'latitude', 'owner_company',
+    # 'other', 'map_img', 'img', 'longitude', 'latitude', 'owner_company',
 
     def wftype(self, obj):
         lwfs = [tt.wf_type for tt in CameraDeviceModel.objects.filter(
@@ -58,7 +60,8 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
         for lwf in lwfs:
             for ll in lwf:
                 # print(ll)
-                wflist.append(ll)
+                if not (ll in wflist):
+                    wflist.append(ll)
         return wflist[:]
 
     wftype.short_description = "违法代码"
@@ -75,19 +78,20 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
 
 
 class TerminalDeviceModelAdmin(admin.ModelAdmin):
-    list_display = ('ip', 'username', 'password', 'server', 'road_device', 'id')
+    list_display = ('ip', 'username', 'password', 'server', 'road_device')
+    search_fields = ['ip', 'road_device__address']
 
 
 class CameraDeviceModelAdmin(admin.ModelAdmin):
     list_display = (
-        'ip', 'port', 'local_ip', 'local_port', 'username', 'password', 'server', 'road_device', 'wf_type',
-        'device_type', 'device_company', 'terminal', 'id'
-
+        'ip', 'username', 'password', 'server', 'road_device', 'wf_type', 'device_type', 'device_company', 'terminal',
     )
+    search_fields = ['ip', 'road_device__address', 'wf_type']
 
 
 class OtherDeviceModelAdmin(admin.ModelAdmin):
-    list_display = ('device_name', 'device_type', 'road_device', 'id')
+    list_display = ('device_name', 'device_type', 'road_device')
+    search_fields = ['device_name', 'device_type', 'road_device__address']
 
 
 admin.site.register(WFTypeModel, WFTypeModelAdmin)
