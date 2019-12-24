@@ -13,13 +13,8 @@ wb = openpyxl.Workbook()
 # Font 字体
 ws = wb.active
 # TODO
-ws.title = '91001'
-
-# default 11pt, Calibri
-# italic24Font = Font(size=24, italic=True)  # 24号斜体
-# Font24 = Font(size=24)
-# ws['A2'].font = Font24
-# ws['A2'] = '24号'
+device_code = 91001
+ws.title = str(device_code)
 
 FontStyle = Font(name='宋体', size=11, bold=True, color=colors.BLACK)
 FontStyle2 = Font(name='宋体', size=11, color=colors.BLACK)
@@ -493,11 +488,10 @@ for i in range(1, 40):
     ws[ws_index6].border = border
     ws[ws_index7].border = border
 
-# # Unmerging cells 拆分单元格
-# ws = wb.copy_worksheet(wb.get_sheet_by_name('merged'))  # 拷贝一份
-# ws.title = 'unmerged'
-# ws.unmerge_cells('A1:D3')
-# ws.unmerge_cells('C5:D5')
-
+for i in range(10):
+    ws = wb.copy_worksheet(wb.get_sheet_by_name(str(device_code)))  # 拷贝一份
+    device_code += 1
+    ws.title = str(device_code)
+    ws['B2'] = '啊啊啊'
 
 wb.save('style2.xlsx')
