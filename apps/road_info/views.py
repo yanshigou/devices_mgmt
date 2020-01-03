@@ -188,3 +188,20 @@ class ExportView(View):
         url = "111.230.246.188:8888/media/" + save_file
         export_excel(data_list, folder)
         return HttpResponse(url)
+
+
+class ModifyRoadCodeView(View):
+    def get(self, request):
+        try:
+            wt_road = RoadDeviceModel.objects.all()
+            for i in wt_road:
+                i.road_code = i.device_code[-5:]
+                i.save()
+        except Exception as e:
+            return JsonResponse({
+                "status": "fail",
+                "error": str(e)
+            })
+        return JsonResponse({
+            "status": "success"
+        })
