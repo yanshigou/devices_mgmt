@@ -3,7 +3,6 @@ from django.db import models
 
 # 继承自带的User表 再添加需要的其他字段
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.hashers import make_password
 
 
 class UserProfile(AbstractUser):

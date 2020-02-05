@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+from django.utils.safestring import mark_safe
 
 admin.site.site_title = "沙坪坝电子警察设备管理系统v1.0"
 
@@ -44,7 +45,7 @@ class OtherInline(admin.TabularInline):
 class RoadDeviceModelAdmin(admin.ModelAdmin):
     list_display = (
         'address', 'road_code', 'device_code', 'road_type', 'wftype', 'terminal', 'camera', 'brigade',
-        'build_company', 'time'
+        'build_company', 'time', 'map_img2', 'img2'
     )
     list_filter = ('road_type', 'build_company')
     search_fields = ['address', 'road_code', 'cameradevicemodel__ip', 'terminaldevicemodel__ip']
@@ -75,6 +76,22 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
         return [tt.ip for tt in CameraDeviceModel.objects.filter(road_device=obj)]
 
     camera.short_description = "相机"
+
+    def map_img2(self, obj):
+        str_html = ""
+        if obj.map_img:
+            str_html += '<a href="%s" target="_blank"><img src="%s" width="50px" /><a/>' % (obj.map_img.url, obj.map_img.url)
+        return mark_safe(str_html)
+
+    map_img2.short_description = "点位示意图"
+
+    def img2(self, obj):
+        str_html = ""
+        if obj.img:
+            str_html += '<a href="%s" target="_blank"><img src="%s" width="50px" /><a/>' % (obj.img.url, obj.img.url)
+        return mark_safe(str_html)
+
+    img2.short_description = "现场照片"
 
 
 class TerminalDeviceModelAdmin(admin.ModelAdmin):

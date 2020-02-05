@@ -71,6 +71,8 @@ class RoadDeviceModel(models.Model):
         ('wt', '违停'), ('dj', '电警'), ('bd', '变道抓拍'), ('cs', '超速'), ('xr', '礼让行人'),
         ('md', '违法鸣笛'), ('wjl', '违禁令'), ('kk', '卡口'), ('jk', '高空监控')
     ), verbose_name="设备类型")
+    is_active = models.CharField(max_length=10, choices=(("正常", "正常"), ("待验收", "待验收"), ("无效", "无效")), default="正常",
+                                 verbose_name="是否有效", blank=True, null=True)
     build_company = models.ForeignKey(BuildCompanyModel, verbose_name="建设单位", blank=True, null=True)
     owner_company = models.ForeignKey(OwnerCompanyModel, verbose_name="业主单位", blank=True, null=True)
     brigade = models.ForeignKey(BrigadeModel, verbose_name="所属大队", blank=True, null=True)
@@ -137,7 +139,7 @@ class CameraDeviceModel(models.Model):
     # wf_type = models.CharField(max_length=200, verbose_name="违法类型", null=True, blank=True)
     device_type = models.CharField(max_length=20, null=True, blank=True, verbose_name='规格型号')
     device_company = models.CharField(max_length=20, null=True, blank=True, verbose_name='厂家',
-                                      choices=(('hk', '海康'), ('kd', '科达')))
+                                      choices=(('hk', '海康'), ('kd', '科达'), ('dh', '大华')))
     terminal = models.ForeignKey(TerminalDeviceModel, verbose_name="接入终端", null=True, blank=True)
 
     class Meta:
