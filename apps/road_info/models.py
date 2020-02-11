@@ -96,7 +96,7 @@ class RoadDeviceModel(models.Model):
 
 
 class TerminalDeviceModel(models.Model):
-    ip = models.CharField(max_length=30, verbose_name="IP地址", unique=True)
+    ip = models.CharField(max_length=30, verbose_name="IP地址")
     username = models.CharField(max_length=20, verbose_name="用户名", blank=True, null=True, default="admin")
     password = models.CharField(max_length=20, verbose_name="密码", blank=True, null=True, default="hik12345")
     server = models.ForeignKey(ServerModel, verbose_name="接入服务器", null=True, blank=True)
