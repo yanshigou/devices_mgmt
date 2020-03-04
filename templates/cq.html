@@ -1,0 +1,460 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>地图展示</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="{% static 'dist/leaflet.css' %}"/>
+    <!--[if lte IE 8]>
+	<link rel="stylesheet" href="dist/leaflet-ie.css" />
+	<link rel="stylesheet" href="dist/locate-ie.css"/>
+	<![endif]-->
+    <link rel="stylesheet" href="{% static 'dist/mobile.css' %}"/>
+    <link rel="stylesheet" href="{% static 'dist/locate.css' %}"/>
+    <script src="{% static 'dist/leaflet.js' %}"></script>
+    <script src="{% static 'dist/proj4js-compressed.js' %}"></script>
+    <script src="{% static 'dist/proj4leaflet.js' %}"></script>
+    <script src="{% static 'dist/locate.js' %}"></script>
+    <script src="{% static 'vendor/jquery/jquery.js' %}"></script>
+</head>
+<body>
+<div id="map"></div>
+<script type="text/javascript">
+
+    var amapNormalUrl = 'http://localhost:8844/788865972/{z}/{x}/{y}';
+    {#var amapNormalUrl = 'http://50.44.14.11:8844/788865972/{z}/{x}/{y}';#}
+    {#console.log(amapNormalUrl);#}
+    var amapNormalLayer = new L.TileLayer(amapNormalUrl, {
+        minZoom: 1,
+        maxZoom: 18,
+        attribution: '高德普通地图'
+    });
+    var mapCenter = new L.LatLng(29.5116, 106.52386);
+
+    {#console.log(amapNormalLayer);#}
+    var map = new L.Map('map', {
+        center: mapCenter,
+        zoom: 13,
+        minZoom: 1,
+        maxZoom: 18,
+        layers: [amapNormalLayer]
+    });
+
+    // control that shows state info on hover
+    var info = L.control();
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (props) {
+        this._div.innerHTML = '<img src="/media/image/liebiao.png" style="width: 150px; height: 500px;">';
+    };
+
+    info.addTo(map);
+
+
+    $.get('/media/wt.txt', function (csv) {
+
+            {#$.get('{% url "point" %}', function(csv) {#}
+            var data = csv.split('\n');
+            $.each(data, function (n, value) {
+                // 索引 值
+                {#alert(n + ' ' + value);#}
+                {#console.log(value);#}
+                if (value) {
+                    var la = parseFloat(value.split(',')[0]);
+                    var ln = parseFloat(value.split(',')[1]);
+                    var address = value.split(',')[2];
+                    var r_id = value.split(',')[3];
+                    var c_ip = value.split(',')[4];
+                    var t_ip = value.split(',')[5];
+                    //console.log(la, ln, address);
+                    var icon = L.icon({
+                        iconUrl: "/media/image/wt.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [30, 30]
+                    });
+                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
+                    var marker_str = "";
+                    $.each(c_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    $.each(t_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;违停<br>' +
+                        marker_str).openPopup();
+                    {#marker.bindTooltip("my tooltip text").openTooltip();#}
+
+                }
+
+            });
+
+        }
+    );
+    $.get('/media/dj.txt', function (csv) {
+
+            {#$.get('{% url "point" %}', function(csv) {#}
+            var data = csv.split('\n');
+            $.each(data, function (n, value) {
+                // 索引 值
+                {#alert(n + ' ' + value);#}
+                {#console.log(value);#}
+                if (value) {
+                    var la = parseFloat(value.split(',')[0]);
+                    var ln = parseFloat(value.split(',')[1]);
+                    var address = value.split(',')[2];
+                    var r_id = value.split(',')[3];
+                    var c_ip = value.split(',')[4];
+                    var t_ip = value.split(',')[5];
+                    //console.log(la, ln, address);
+                    var icon = L.icon({
+                        iconUrl: "/media/image/dj.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [30, 30]
+                    });
+                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
+                    var marker_str = "";
+                    $.each(c_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    $.each(t_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                        marker_str).openPopup();
+                    {#marker.bindTooltip("my tooltip text").openTooltip();#}
+
+                }
+
+            });
+
+        }
+    );
+    $.get('/media/bd.txt', function (csv) {
+
+            {#$.get('{% url "point" %}', function(csv) {#}
+            var data = csv.split('\n');
+            $.each(data, function (n, value) {
+                // 索引 值
+                {#alert(n + ' ' + value);#}
+                {#console.log(value);#}
+                if (value) {
+                    var la = parseFloat(value.split(',')[0]);
+                    var ln = parseFloat(value.split(',')[1]);
+                    var address = value.split(',')[2];
+                    var r_id = value.split(',')[3];
+                    var c_ip = value.split(',')[4];
+                    var t_ip = value.split(',')[5];
+                    //console.log(la, ln, address);
+                    var icon = L.icon({
+                        iconUrl: "/media/image/bd.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [30, 30]
+                    });
+                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
+                    var marker_str = "";
+                    $.each(c_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    $.each(t_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                        marker_str).openPopup();
+                    {#marker.bindTooltip("my tooltip text").openTooltip();#}
+
+                }
+
+            });
+
+        }
+    );
+    $.get('/media/cs.txt', function (csv) {
+
+            {#$.get('{% url "point" %}', function(csv) {#}
+            var data = csv.split('\n');
+            $.each(data, function (n, value) {
+                // 索引 值
+                {#alert(n + ' ' + value);#}
+                {#console.log(value);#}
+                if (value) {
+                    var la = parseFloat(value.split(',')[0]);
+                    var ln = parseFloat(value.split(',')[1]);
+                    var address = value.split(',')[2];
+                    var r_id = value.split(',')[3];
+                    var c_ip = value.split(',')[4];
+                    var t_ip = value.split(',')[5];
+                    //console.log(la, ln, address);
+                    var icon = L.icon({
+                        iconUrl: "/media/image/cs.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [30, 30]
+                    });
+                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
+                    var marker_str = "";
+                    $.each(c_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    $.each(t_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                        marker_str).openPopup();
+                    {#marker.bindTooltip("my tooltip text").openTooltip();#}
+
+                }
+
+            });
+
+        }
+    );
+    $.get('/media/xr.txt', function (csv) {
+
+            {#$.get('{% url "point" %}', function(csv) {#}
+            var data = csv.split('\n');
+            $.each(data, function (n, value) {
+                // 索引 值
+                {#alert(n + ' ' + value);#}
+                {#console.log(value);#}
+                if (value) {
+                    var la = parseFloat(value.split(',')[0]);
+                    var ln = parseFloat(value.split(',')[1]);
+                    var address = value.split(',')[2];
+                    var r_id = value.split(',')[3];
+                    var c_ip = value.split(',')[4];
+                    var t_ip = value.split(',')[5];
+                    //console.log(la, ln, address);
+                    var icon = L.icon({
+                        iconUrl: "/media/image/xr.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [30, 30]
+                    });
+                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
+                    var marker_str = "";
+                    $.each(c_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    $.each(t_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                        marker_str).openPopup();
+                    {#marker.bindTooltip("my tooltip text").openTooltip();#}
+
+                }
+
+            });
+
+        }
+    );
+    $.get('/media/md.txt', function (csv) {
+
+            {#$.get('{% url "point" %}', function(csv) {#}
+            var data = csv.split('\n');
+            $.each(data, function (n, value) {
+                // 索引 值
+                {#alert(n + ' ' + value);#}
+                {#console.log(value);#}
+                if (value) {
+                    var la = parseFloat(value.split(',')[0]);
+                    var ln = parseFloat(value.split(',')[1]);
+                    var address = value.split(',')[2];
+                    var r_id = value.split(',')[3];
+                    var c_ip = value.split(',')[4];
+                    var t_ip = value.split(',')[5];
+                    //console.log(la, ln, address);
+                    var icon = L.icon({
+                        iconUrl: "/media/image/md.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [30, 30]
+                    });
+                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
+                    var marker_str = "";
+                    $.each(c_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    $.each(t_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                        marker_str).openPopup();
+                    {#marker.bindTooltip("my tooltip text").openTooltip();#}
+
+                }
+
+            });
+
+        }
+    );
+    $.get('/media/wjl.txt', function (csv) {
+
+            {#$.get('{% url "point" %}', function(csv) {#}
+            var data = csv.split('\n');
+            $.each(data, function (n, value) {
+                // 索引 值
+                {#alert(n + ' ' + value);#}
+                {#console.log(value);#}
+                if (value) {
+                    var la = parseFloat(value.split(',')[0]);
+                    var ln = parseFloat(value.split(',')[1]);
+                    var address = value.split(',')[2];
+                    var r_id = value.split(',')[3];
+                    var c_ip = value.split(',')[4];
+                    var t_ip = value.split(',')[5];
+                    //console.log(la, ln, address);
+                    var icon = L.icon({
+                        iconUrl: "/media/image/wjl.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [30, 30]
+                    });
+                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
+                    var marker_str = "";
+                    $.each(c_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    $.each(t_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                        marker_str).openPopup();
+                    {#marker.bindTooltip("my tooltip text").openTooltip();#}
+
+                }
+
+            });
+
+        }
+    );
+    $.get('/media/kk.txt', function (csv) {
+
+            {#$.get('{% url "point" %}', function(csv) {#}
+            var data = csv.split('\n');
+            $.each(data, function (n, value) {
+                // 索引 值
+                {#alert(n + ' ' + value);#}
+                {#console.log(value);#}
+                if (value) {
+                    var la = parseFloat(value.split(',')[0]);
+                    var ln = parseFloat(value.split(',')[1]);
+                    var address = value.split(',')[2];
+                    var r_id = value.split(',')[3];
+                    var c_ip = value.split(',')[4];
+                    var t_ip = value.split(',')[5];
+                    //console.log(la, ln, address);
+                    var icon = L.icon({
+                        iconUrl: "/media/image/kk.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [30, 30]
+                    });
+                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
+                    var marker_str = "";
+                    $.each(c_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    $.each(t_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                        marker_str).openPopup();
+                    {#marker.bindTooltip("my tooltip text").openTooltip();#}
+
+                }
+
+            });
+
+        }
+    );
+    $.get('/media/jk.txt', function (csv) {
+
+            {#$.get('{% url "point" %}', function(csv) {#}
+            var data = csv.split('\n');
+            $.each(data, function (n, value) {
+                // 索引 值
+                {#alert(n + ' ' + value);#}
+                {#console.log(value);#}
+                if (value) {
+                    var la = parseFloat(value.split(',')[0]);
+                    var ln = parseFloat(value.split(',')[1]);
+                    var address = value.split(',')[2];
+                    var r_id = value.split(',')[3];
+                    var c_ip = value.split(',')[4];
+                    var t_ip = value.split(',')[5];
+                    //console.log(la, ln, address);
+                    var icon = L.icon({
+                        iconUrl: "/media/image/jk.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [30, 30]
+                    });
+                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
+                    var marker_str = "";
+                    $.each(c_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    $.each(t_ip.split('-'), function (n, value) {
+                        if (value.length > 1){
+                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                        }
+                    });
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                        marker_str).openPopup();
+                    {#marker.bindTooltip("my tooltip text").openTooltip();#}
+
+                }
+
+            });
+
+        }
+    );
+
+</script>
+</body>
+</html>
