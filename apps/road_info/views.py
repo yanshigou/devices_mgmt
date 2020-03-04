@@ -2,9 +2,10 @@
 from django.views import View
 from django.http import JsonResponse, HttpResponse
 from .models import *
-from myutils.utils import export_excel
+from myutils.utils import export_excel, bd09_to_gcj02
 from datetime import datetime
 from devices_mgmt.settings import MEDIA_ROOT
+from django.shortcuts import render
 
 
 class Test(View):
@@ -205,3 +206,225 @@ class ModifyRoadCodeView(View):
         return JsonResponse({
             "status": "success"
         })
+
+
+class ShowMapView(View):
+    def get(self, request):
+        file = MEDIA_ROOT + '\\wt.txt'
+        all_devices = RoadDeviceModel.objects.filter(road_type='wt')
+        f = open(file, 'w+', encoding='utf-8')
+        for i in all_devices:
+            longitude = i.longitude
+            latitude = i.latitude
+            address = i.address
+            r_id = str(i.id)
+            c = CameraDeviceModel.objects.filter(road_device_id=r_id)
+            c_ip = ""
+            for x in c:
+                c_ip += x.ip + "-"
+
+            t = TerminalDeviceModel.objects.filter(road_device_id=r_id)
+            t_ip = ""
+            for u in t:
+                t_ip += u.ip + '-'
+            # 百度坐标转换为高德坐标
+            if longitude and latitude:
+                if len(latitude) > 4 and len(longitude) > 3:
+                    lon, lat = bd09_to_gcj02(float(longitude), float(latitude))
+                    a = str(lon) + ',' + str(lat) + ',' + address + ',' + r_id + "," + c_ip + "," + t_ip + '\n'
+                    f.write(a)
+        f.close()
+        file = MEDIA_ROOT + '\\dj.txt'
+        all_devices = RoadDeviceModel.objects.filter(road_type='dj')
+        f = open(file, 'w+', encoding='utf-8')
+        for i in all_devices:
+            longitude = i.longitude
+            latitude = i.latitude
+            address = i.address
+            r_id = str(i.id)
+            c = CameraDeviceModel.objects.filter(road_device_id=r_id)
+            c_ip = ""
+            for x in c:
+                c_ip += x.ip + "-"
+
+            t = TerminalDeviceModel.objects.filter(road_device_id=r_id)
+            t_ip = ""
+            for u in t:
+                t_ip += u.ip + '-'
+            # 百度坐标转换为高德坐标
+            if longitude and latitude:
+                if len(latitude) > 4 and len(longitude) > 3:
+                    lon, lat = bd09_to_gcj02(float(longitude), float(latitude))
+                    a = str(lon) + ',' + str(lat) + ',' + address + ',' + r_id + "," + c_ip + "," + t_ip + '\n'
+                    f.write(a)
+        f.close()
+        file = MEDIA_ROOT + '\\bd.txt'
+        all_devices = RoadDeviceModel.objects.filter(road_type='bd')
+        f = open(file, 'w+', encoding='utf-8')
+        for i in all_devices:
+            longitude = i.longitude
+            latitude = i.latitude
+            address = i.address
+            r_id = str(i.id)
+            c = CameraDeviceModel.objects.filter(road_device_id=r_id)
+            c_ip = ""
+            for x in c:
+                c_ip += x.ip + "-"
+
+            t = TerminalDeviceModel.objects.filter(road_device_id=r_id)
+            t_ip = ""
+            for u in t:
+                t_ip += u.ip + '-'
+            # 百度坐标转换为高德坐标
+            if longitude and latitude:
+                if len(latitude) > 4 and len(longitude) > 3:
+                    lon, lat = bd09_to_gcj02(float(longitude), float(latitude))
+                    a = str(lon) + ',' + str(lat) + ',' + address + ',' + r_id + "," + c_ip + "," + t_ip + '\n'
+                    f.write(a)
+        f.close()
+        file = MEDIA_ROOT + '\\cs.txt'
+        all_devices = RoadDeviceModel.objects.filter(road_type='cs')
+        f = open(file, 'w+', encoding='utf-8')
+        for i in all_devices:
+            longitude = i.longitude
+            latitude = i.latitude
+            address = i.address
+            r_id = str(i.id)
+            c = CameraDeviceModel.objects.filter(road_device_id=r_id)
+            c_ip = ""
+            for x in c:
+                c_ip += x.ip + "-"
+
+            t = TerminalDeviceModel.objects.filter(road_device_id=r_id)
+            t_ip = ""
+            for u in t:
+                t_ip += u.ip + '-'
+            # 百度坐标转换为高德坐标
+            if longitude and latitude:
+                if len(latitude) > 4 and len(longitude) > 3:
+                    lon, lat = bd09_to_gcj02(float(longitude), float(latitude))
+                    a = str(lon) + ',' + str(lat) + ',' + address + ',' + r_id + "," + c_ip + "," + t_ip + '\n'
+                    f.write(a)
+        f.close()
+        file = MEDIA_ROOT + '\\xr.txt'
+        all_devices = RoadDeviceModel.objects.filter(road_type='xr')
+        f = open(file, 'w+', encoding='utf-8')
+        for i in all_devices:
+            longitude = i.longitude
+            latitude = i.latitude
+            address = i.address
+            r_id = str(i.id)
+            c = CameraDeviceModel.objects.filter(road_device_id=r_id)
+            c_ip = ""
+            for x in c:
+                c_ip += x.ip + "-"
+
+            t = TerminalDeviceModel.objects.filter(road_device_id=r_id)
+            t_ip = ""
+            for u in t:
+                t_ip += u.ip + '-'
+            # 百度坐标转换为高德坐标
+            if longitude and latitude:
+                if len(latitude) > 4 and len(longitude) > 3:
+                    lon, lat = bd09_to_gcj02(float(longitude), float(latitude))
+                    a = str(lon) + ',' + str(lat) + ',' + address + ',' + r_id + "," + c_ip + "," + t_ip + '\n'
+                    f.write(a)
+        f.close()
+        file = MEDIA_ROOT + '\\md.txt'
+        all_devices = RoadDeviceModel.objects.filter(road_type='md')
+        f = open(file, 'w+', encoding='utf-8')
+        for i in all_devices:
+            longitude = i.longitude
+            latitude = i.latitude
+            address = i.address
+            r_id = str(i.id)
+            c = CameraDeviceModel.objects.filter(road_device_id=r_id)
+            c_ip = ""
+            for x in c:
+                c_ip += x.ip + "-"
+
+            t = TerminalDeviceModel.objects.filter(road_device_id=r_id)
+            t_ip = ""
+            for u in t:
+                t_ip += u.ip + '-'
+            # 百度坐标转换为高德坐标
+            if longitude and latitude:
+                if len(latitude) > 4 and len(longitude) > 3:
+                    lon, lat = bd09_to_gcj02(float(longitude), float(latitude))
+                    a = str(lon) + ',' + str(lat) + ',' + address + ',' + r_id + "," + c_ip + "," + t_ip + '\n'
+                    f.write(a)
+        f.close()
+        file = MEDIA_ROOT + '\\wjl.txt'
+        all_devices = RoadDeviceModel.objects.filter(road_type='wjl')
+        f = open(file, 'w+', encoding='utf-8')
+        for i in all_devices:
+            longitude = i.longitude
+            latitude = i.latitude
+            address = i.address
+            r_id = str(i.id)
+            c = CameraDeviceModel.objects.filter(road_device_id=r_id)
+            c_ip = ""
+            for x in c:
+                c_ip += x.ip + "-"
+
+            t = TerminalDeviceModel.objects.filter(road_device_id=r_id)
+            t_ip = ""
+            for u in t:
+                t_ip += u.ip + '-'
+            # 百度坐标转换为高德坐标
+            if longitude and latitude:
+                if len(latitude) > 4 and len(longitude) > 3:
+                    lon, lat = bd09_to_gcj02(float(longitude), float(latitude))
+                    a = str(lon) + ',' + str(lat) + ',' + address + ',' + r_id + "," + c_ip + "," + t_ip + '\n'
+                    f.write(a)
+        f.close()
+        file = MEDIA_ROOT + '\\kk.txt'
+        all_devices = RoadDeviceModel.objects.filter(road_type='kk')
+        f = open(file, 'w+', encoding='utf-8')
+        for i in all_devices:
+            longitude = i.longitude
+            latitude = i.latitude
+            address = i.address
+            r_id = str(i.id)
+            c = CameraDeviceModel.objects.filter(road_device_id=r_id)
+            c_ip = ""
+            for x in c:
+                c_ip += x.ip + "-"
+
+            t = TerminalDeviceModel.objects.filter(road_device_id=r_id)
+            t_ip = ""
+            for u in t:
+                t_ip += u.ip + '-'
+            # 百度坐标转换为高德坐标
+            if longitude and latitude:
+                if len(latitude) > 4 and len(longitude) > 3:
+                    lon, lat = bd09_to_gcj02(float(longitude), float(latitude))
+                    a = str(lon) + ',' + str(lat) + ',' + address + ',' + r_id + "," + c_ip + "," + t_ip + '\n'
+                    f.write(a)
+        f.close()
+        file = MEDIA_ROOT + '\\jk.txt'
+        all_devices = RoadDeviceModel.objects.filter(road_type='jk')
+        f = open(file, 'w+', encoding='utf-8')
+        for i in all_devices:
+            longitude = i.longitude
+            latitude = i.latitude
+            address = i.address
+            r_id = str(i.id)
+            c = CameraDeviceModel.objects.filter(road_device_id=r_id)
+            c_ip = ""
+            for x in c:
+                c_ip += x.ip + "-"
+
+            t = TerminalDeviceModel.objects.filter(road_device_id=r_id)
+            t_ip = ""
+            for u in t:
+                t_ip += u.ip + '-'
+            # 百度坐标转换为高德坐标
+            if longitude and latitude:
+                if len(latitude) > 4 and len(longitude) > 3:
+                    lon, lat = bd09_to_gcj02(float(longitude), float(latitude))
+                    a = str(lon) + ',' + str(lat) + ',' + address + ',' + r_id + "," + c_ip + "," + t_ip + '\n'
+                    f.write(a)
+        f.close()
+        # return render(request, "map.html", {})
+        return render(request, "cq.html", {})

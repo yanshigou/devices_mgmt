@@ -44,11 +44,10 @@ class OtherInline(admin.TabularInline):
 
 class RoadDeviceModelAdmin(admin.ModelAdmin):
     list_display = (
-        'address', 'road_code', 'device_code', 'road_type', 'wftype', 'terminal', 'camera', 'brigade',
-        'build_company', 'time'
+        'address', 'road_type', 'wftype', 'brigade', 'build_company', 'is_active', 'longitude', 'latitude'
     )
-    list_filter = ('road_type', 'build_company')
-    search_fields = ['address', 'road_code', 'cameradevicemodel__ip', 'terminaldevicemodel__ip']
+    list_filter = ('road_type', 'build_company', 'brigade', 'is_active')
+    search_fields = ['address', 'road_code', 'device_code', 'cameradevicemodel__ip', 'terminaldevicemodel__ip']
 
     inlines = [CameraInline, TerminalInline, OtherInline]
 
@@ -67,11 +66,11 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
 
     wftype.short_description = "违法代码"
 
-    def terminal(self, obj):
-        return [tt.ip for tt in TerminalDeviceModel.objects.filter(road_device=obj)]
-
-    terminal.short_description = "终端"
-
+    # def terminal(self, obj):
+    #     return [tt.ip for tt in TerminalDeviceModel.objects.filter(road_device=obj)]
+    #
+    # terminal.short_description = "终端"
+    #
     def camera(self, obj):
         return [tt.ip for tt in CameraDeviceModel.objects.filter(road_device=obj)]
 
@@ -95,15 +94,17 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
 
 
 class TerminalDeviceModelAdmin(admin.ModelAdmin):
-    list_display = ('ip', 'username', 'password', 'server', 'road_device')
+    list_display = ('ip', 'device_company', 'device_type', 'server', 'road_device', 'device_type2')
     search_fields = ['ip', 'road_device__address']
+    list_filter = ('device_company', 'server', 'is_active')
 
 
 class CameraDeviceModelAdmin(admin.ModelAdmin):
     list_display = (
-        'ip', 'username', 'password', 'server', 'road_device', 'wf_type', 'device_type', 'device_company', 'terminal',
+        'ip', 'wf_type', 'device_company', 'device_type', 'server', 'terminal',
     )
-    search_fields = ['ip', 'road_device__address', 'wf_type']
+    search_fields = ['ip', 'device_type', 'wf_type', 'terminal']
+    list_filter = ('device_company', 'server', 'wf_type', 'is_active')
 
 
 class OtherDeviceModelAdmin(admin.ModelAdmin):

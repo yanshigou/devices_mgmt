@@ -104,6 +104,9 @@ class TerminalDeviceModel(models.Model):
     device_type = models.CharField(max_length=20, null=True, blank=True, verbose_name='规格型号')
     device_company = models.CharField(max_length=20, null=True, blank=True, verbose_name='厂家',
                                       choices=(('hk', '海康'), ('kd', '科达'), ('dh', '大华')))
+    device_type2 = models.CharField(max_length=20, choices=(("终端", "终端"), ("录像机", "录像机")), default="终端", verbose_name='类型')
+    is_active = models.CharField(max_length=10, choices=(("正常", "正常"), ("待验收", "待验收"), ("无效", "无效")), default="正常",
+                                 verbose_name="是否有效", blank=True, null=True)
 
     class Meta:
         verbose_name = '终端设备信息'
@@ -131,6 +134,8 @@ wf_types = (('13443', '违反禁令标志'),
 
 class CameraDeviceModel(models.Model):
     ip = models.CharField(max_length=30, verbose_name="IP地址", unique=True)
+    is_active = models.CharField(max_length=10, choices=(("正常", "正常"), ("待验收", "待验收"), ("无效", "无效")), default="正常",
+                                 verbose_name="是否有效", blank=True, null=True)
     username = models.CharField(max_length=20, verbose_name="用户名", blank=True, null=True, default="admin")
     password = models.CharField(max_length=20, verbose_name="密码", blank=True, null=True, default="hik12345")
     server = models.ForeignKey(ServerModel, verbose_name="接入服务器", null=True, blank=True)
