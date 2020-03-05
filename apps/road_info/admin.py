@@ -6,6 +6,8 @@ admin.site.site_title = "沙坪坝电子警察设备管理系统v1.0"
 
 admin.site.site_header = "沙坪坝电子警察设备管理系统v1.0"
 
+admin.site.site_url = "/map/"
+
 
 class WFTypeModelAdmin(admin.ModelAdmin):
     list_display = ('wf_code', 'wf_name')
@@ -42,6 +44,11 @@ class OtherInline(admin.TabularInline):
     extra = 0
 
 
+class LEDInline(admin.StackedInline):
+    model = LEDInfoModel
+    extra = 0
+
+
 class RoadDeviceModelAdmin(admin.ModelAdmin):
     list_display = (
         'address', 'road_type', 'wftype', 'brigade', 'build_company', 'is_active', 'longitude', 'latitude'
@@ -49,7 +56,7 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
     list_filter = ('road_type', 'build_company', 'brigade', 'is_active')
     search_fields = ['address', 'road_code', 'device_code', 'cameradevicemodel__ip', 'terminaldevicemodel__ip']
 
-    inlines = [CameraInline, TerminalInline, OtherInline]
+    inlines = [CameraInline, TerminalInline, OtherInline, LEDInline]
 
     # 'other', 'map_img', 'img', 'longitude', 'latitude', 'owner_company',
 
@@ -107,6 +114,12 @@ class CameraDeviceModelAdmin(admin.ModelAdmin):
     list_filter = ('device_company', 'server', 'wf_type', 'is_active')
 
 
+class LEDInfoModelAdmin(admin.ModelAdmin):
+    list_display = ('ip', 'server', 'road_device', 'device_company', 'is_active')
+    search_fields = ['ip', 'device_company']
+    list_filter = ('server', 'is_active', 'device_company')
+
+
 class OtherDeviceModelAdmin(admin.ModelAdmin):
     list_display = ('device_name', 'device_type', 'road_device')
     search_fields = ['device_name', 'device_type', 'road_device__address']
@@ -121,3 +134,4 @@ admin.site.register(RoadDeviceModel, RoadDeviceModelAdmin)
 admin.site.register(TerminalDeviceModel, TerminalDeviceModelAdmin)
 admin.site.register(CameraDeviceModel, CameraDeviceModelAdmin)
 admin.site.register(OtherDeviceModel, OtherDeviceModelAdmin)
+admin.site.register(LEDInfoModel, LEDInfoModelAdmin)

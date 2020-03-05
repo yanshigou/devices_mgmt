@@ -167,3 +167,21 @@ class OtherDeviceModel(models.Model):
 
     def __str__(self):
         return self.device_name
+
+
+class LEDInfoModel(models.Model):
+    ip = models.CharField(max_length=30, verbose_name="IP地址", unique=True)
+    username = models.CharField(max_length=20, verbose_name="用户名", blank=True, null=True, default="admin")
+    password = models.CharField(max_length=20, verbose_name="密码", blank=True, null=True, default="hik12345")
+    server = models.ForeignKey(ServerModel, verbose_name="接入服务器", null=True, blank=True)
+    road_device = models.ForeignKey(RoadDeviceModel, verbose_name="所属路口设备", null=True, blank=True)
+    device_company = models.CharField(max_length=30, null=True, blank=True, verbose_name='厂家')
+    is_active = models.CharField(max_length=10, choices=(("正常", "正常"), ("待验收", "待验收"), ("无效", "无效")), default="正常",
+                                 verbose_name="是否有效", blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'LED屏信息表'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.ip
