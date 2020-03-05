@@ -23,8 +23,8 @@
 <div id="map"></div>
 <script type="text/javascript">
 
-    var amapNormalUrl = 'http://localhost:8844/788865972/{z}/{x}/{y}';
-    {#var amapNormalUrl = 'http://50.44.14.11:8844/788865972/{z}/{x}/{y}';#}
+    {#var amapNormalUrl = 'http://localhost:8844/788865972/{z}/{x}/{y}';#}
+    var amapNormalUrl = 'http://50.44.14.11:8844/788865972/{z}/{x}/{y}';
     {#console.log(amapNormalUrl);#}
     var amapNormalLayer = new L.TileLayer(amapNormalUrl, {
         minZoom: 1,
@@ -50,9 +50,26 @@
         this.update();
         return this._div;
     };
-
+    var wt_layers=[];
+    var dj_layers=[];
+    var bd_layers=[];
+    var cs_layers=[];
+    var xr_layers=[];
+    var md_layers=[];
+    var wjl_layers=[];
+    var kk_layers=[];
+    var jk_layers=[];
     info.update = function (props) {
-        this._div.innerHTML = '<img src="/media/image/liebiao.png" style="width: 150px; height: 500px;">';
+        {#this._div.innerHTML = '<img src="/media/image/liebiao.png" style="width: 150px; height: 500px;">';#}
+        this._div.innerHTML = '<label><img src="/media/image/wt.png" style="width: 50px; height: 50px;"><input type="checkbox" value="" id="wt_box" checked/>违停</label><br>' +
+            '<label><img src="/media/image/dj.png" style="width: 50px; height: 50px;"><input type="checkbox" value="" id="dj_box" checked/>电警</label><br>' +
+            '<label><img src="/media/image/bd.png" style="width: 50px; height: 50px;"><input type="checkbox" value="" id="bd_box" checked/>变道抓拍</label><br>' +
+            '<label><img src="/media/image/cs.png" style="width: 50px; height: 50px;"><input type="checkbox" value="" id="cs_box" checked/>超速</label><br>' +
+            '<label><img src="/media/image/xr.png" style="width: 50px; height: 50px;"><input type="checkbox" value="" id="xr_box" checked/>礼让行人</label><br>' +
+            '<label><img src="/media/image/md.png" style="width: 50px; height: 50px;"><input type="checkbox" value="" id="md_box" checked/>违法鸣笛</label><br>' +
+            '<label><img src="/media/image/wjl.png" style="width: 50px; height: 50px;"><input type="checkbox" value="" id="wjl_box" checked/>违禁令</label><br>' +
+            '<label><img src="/media/image/kk.png" style="width: 50px; height: 50px;"><input type="checkbox" value="" id="kk_box" checked/>卡口</label><br>' +
+            '<label><img src="/media/image/jk.png" style="width: 50px; height: 50px;"><input type="checkbox" value="" id="jk_box" checked/>高空监控</label><br>';
     };
 
     info.addTo(map);
@@ -79,17 +96,18 @@
                         iconSize: [40, 40],
                         iconAnchor: [30, 30]
                     });
-                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    var marker = L.marker([ln, la], {icon});
+                    wt_layers.push(marker);  
                     //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
                     var marker_str = "";
                     $.each(c_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     $.each(t_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;违停<br>' +
@@ -99,7 +117,9 @@
                 }
 
             });
-
+            var myGroup=L.layerGroup(wt_layers);
+            map.addLayer(myGroup);
+            {#myGroup.clearLayers();  //加入到按钮中去#}
         }
     );
     $.get('/media/dj.txt', function (csv) {
@@ -123,17 +143,18 @@
                         iconSize: [40, 40],
                         iconAnchor: [30, 30]
                     });
-                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    var marker = L.marker([ln, la], {icon});
+                    dj_layers.push(marker); 
                     //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
                     var marker_str = "";
                     $.each(c_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     $.each(t_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
@@ -143,6 +164,9 @@
                 }
 
             });
+            var myGroup=L.layerGroup(dj_layers);
+            map.addLayer(myGroup);
+            {#myGroup.clearLayers();  //加入到按钮中去#}
 
         }
     );
@@ -167,26 +191,30 @@
                         iconSize: [40, 40],
                         iconAnchor: [30, 30]
                     });
-                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    var marker = L.marker([ln, la], {icon});
+                    bd_layers.push(marker);
                     //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
                     var marker_str = "";
                     $.each(c_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     $.each(t_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
-                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;变道抓拍<br>' +
                         marker_str).openPopup();
                     {#marker.bindTooltip("my tooltip text").openTooltip();#}
 
                 }
 
             });
+            var myGroup=L.layerGroup(bd_layers);
+            map.addLayer(myGroup);
+            {#myGroup.clearLayers();  //加入到按钮中去#}
 
         }
     );
@@ -211,26 +239,30 @@
                         iconSize: [40, 40],
                         iconAnchor: [30, 30]
                     });
-                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    var marker = L.marker([ln, la], {icon});
+                    cs_layers.push(marker);
                     //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
                     var marker_str = "";
                     $.each(c_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     $.each(t_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
-                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;超速<br>' +
                         marker_str).openPopup();
                     {#marker.bindTooltip("my tooltip text").openTooltip();#}
 
                 }
 
             });
+            var myGroup=L.layerGroup(cs_layers);
+            map.addLayer(myGroup);
+            {#myGroup.clearLayers();  //加入到按钮中去#}
 
         }
     );
@@ -255,26 +287,30 @@
                         iconSize: [40, 40],
                         iconAnchor: [30, 30]
                     });
-                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    var marker = L.marker([ln, la], {icon});
+                    xr_layers.push(marker);
                     //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
                     var marker_str = "";
                     $.each(c_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     $.each(t_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
-                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;礼让行人<br>' +
                         marker_str).openPopup();
                     {#marker.bindTooltip("my tooltip text").openTooltip();#}
 
                 }
 
             });
+            var myGroup=L.layerGroup(xr_layers);
+            map.addLayer(myGroup);
+            {#myGroup.clearLayers();  //加入到按钮中去#}
 
         }
     );
@@ -299,26 +335,30 @@
                         iconSize: [40, 40],
                         iconAnchor: [30, 30]
                     });
-                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    var marker = L.marker([ln, la], {icon});
+                    md_layers.push(marker);
                     //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
                     var marker_str = "";
                     $.each(c_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     $.each(t_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
-                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;违法鸣笛<br>' +
                         marker_str).openPopup();
                     {#marker.bindTooltip("my tooltip text").openTooltip();#}
 
                 }
 
             });
+            var myGroup=L.layerGroup(md_layers);
+            map.addLayer(myGroup);
+            {#myGroup.clearLayers();  //加入到按钮中去#}
 
         }
     );
@@ -343,26 +383,30 @@
                         iconSize: [40, 40],
                         iconAnchor: [30, 30]
                     });
-                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    var marker = L.marker([ln, la], {icon});
+                    wjl_layers.push(marker);
                     //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
                     var marker_str = "";
                     $.each(c_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     $.each(t_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
-                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;违禁令<br>' +
                         marker_str).openPopup();
                     {#marker.bindTooltip("my tooltip text").openTooltip();#}
 
                 }
 
             });
+            var myGroup=L.layerGroup(wjl_layers);
+            map.addLayer(myGroup);
+            {#myGroup.clearLayers();  //加入到按钮中去#}
 
         }
     );
@@ -387,26 +431,30 @@
                         iconSize: [40, 40],
                         iconAnchor: [30, 30]
                     });
-                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    var marker = L.marker([ln, la], {icon});
+                    kk_layers.push(marker);
                     //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
                     var marker_str = "";
                     $.each(c_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     $.each(t_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
-                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;卡口<br>' +
                         marker_str).openPopup();
                     {#marker.bindTooltip("my tooltip text").openTooltip();#}
 
                 }
 
             });
+            var myGroup=L.layerGroup(kk_layers);
+            map.addLayer(myGroup);
+            {#myGroup.clearLayers();  //加入到按钮中去#}
 
         }
     );
@@ -431,30 +479,126 @@
                         iconSize: [40, 40],
                         iconAnchor: [30, 30]
                     });
-                    var marker = L.marker([ln, la], {icon}).addTo(map);
+                    var marker = L.marker([ln, la], {icon});
+                    jk_layers.push(marker);
                     //marker.bindPopup('<a href="/devices/deviceView/' + address_id + '/' + '">' + address + '</a>').openPopup();
                     var marker_str = "";
                     $.each(c_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;摄像机&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
                     $.each(t_ip.split('-'), function (n, value) {
                         if (value.length > 1){
-                            marker_str += '<a href="http://' + value + '">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
+                            marker_str += '<a href="http://' + value + '" target="_blank">' + value + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;终端&nbsp;&nbsp;&nbsp;&nbsp;<br>'
                         }
                     });
-                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;电警<br>' +
+                    marker.bindPopup('<a href="/road_info/roaddevicemodel/' + r_id + '/' + 'change/">' + address + '</a>&nbsp;&nbsp;&nbsp;&nbsp;高空监控<br>' +
                         marker_str).openPopup();
                     {#marker.bindTooltip("my tooltip text").openTooltip();#}
 
                 }
 
             });
+            var myGroup=L.layerGroup(jk_layers);
+            map.addLayer(myGroup);
+            {#myGroup.clearLayers();  //加入到按钮中去#}
 
         }
     );
 
+</script>
+<script>
+$('#wt_box').click(function(){
+    var is_checked = this.checked;
+    var myGroup=L.layerGroup(wt_layers);
+    if (is_checked===true){
+        map.addLayer(myGroup);
+    } else {
+        map.addLayer(myGroup);
+        myGroup.clearLayers();
+    }
+});
+$('#dj_box').click(function(){
+    var is_checked = this.checked;
+    var myGroup=L.layerGroup(dj_layers);
+    if (is_checked===true){
+        map.addLayer(myGroup);
+    } else {
+        map.addLayer(myGroup);
+        myGroup.clearLayers();
+    }
+});
+$('#bd_box').click(function(){
+    var is_checked = this.checked;
+    var myGroup=L.layerGroup(bd_layers);
+    if (is_checked===true){
+        map.addLayer(myGroup);
+    } else {
+        map.addLayer(myGroup);
+        myGroup.clearLayers();
+    }
+});
+$('#cs_box').click(function(){
+    var is_checked = this.checked;
+    var myGroup=L.layerGroup(cs_layers);
+    if (is_checked===true){
+        map.addLayer(myGroup);
+    } else {
+        map.addLayer(myGroup);
+        myGroup.clearLayers();
+    }
+});
+$('#xr_box').click(function(){
+    var is_checked = this.checked;
+    var myGroup=L.layerGroup(xr_layers);
+    if (is_checked===true){
+        map.addLayer(myGroup);
+    } else {
+        map.addLayer(myGroup);
+        myGroup.clearLayers();
+    }
+});
+$('#md_box').click(function(){
+    var is_checked = this.checked;
+    var myGroup=L.layerGroup(md_layers);
+    if (is_checked===true){
+        map.addLayer(myGroup);
+    } else {
+        map.addLayer(myGroup);
+        myGroup.clearLayers();
+    }
+});
+$('#wjl_box').click(function(){
+    var is_checked = this.checked;
+    var myGroup=L.layerGroup(wjl_layers);
+    if (is_checked===true){
+        map.addLayer(myGroup);
+    } else {
+        map.addLayer(myGroup);
+        myGroup.clearLayers();
+    }
+});
+$('#kk_box').click(function(){
+    var is_checked = this.checked;
+    var myGroup=L.layerGroup(kk_layers);
+    if (is_checked===true){
+        map.addLayer(myGroup);
+    } else {
+        map.addLayer(myGroup);
+        myGroup.clearLayers();
+    }
+});
+$('#jk_box').click(function(){
+    var is_checked = this.checked;
+    var myGroup=L.layerGroup(jk_layers);
+    if (is_checked===true){
+        map.addLayer(myGroup);
+    } else {
+        map.addLayer(myGroup);
+        myGroup.clearLayers();
+    }
+});
 </script>
 </body>
 </html>
