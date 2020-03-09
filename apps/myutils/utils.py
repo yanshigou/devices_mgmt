@@ -8,6 +8,7 @@ from openpyxl.styles import Alignment
 from openpyxl.drawing.image import Image
 from openpyxl.styles import Border, Side
 import math
+import xlsxwriter
 
 data_dict = [
     {
@@ -617,6 +618,39 @@ def bd09_to_gcj02(bd_lon, bd_lat):
     gg_lng = z * math.cos(theta)
     gg_lat = z * math.sin(theta)
     return [gg_lng, gg_lat]
+
+
+# 导出台账
+def export_2_excel(all_dj_datas, sheet_info, filename):
+    # print(all_wt_datas)
+
+    title = ['路口名称', '设备类型', '执法设备编号', '相机', '终端', '建设单位', '经纬度', '是否有效', '点位示意图', '现场照片']
+
+    f = xlsxwriter.Workbook(filename)
+    fsheet = f.add_worksheet(sheet_info)
+    # 首行格式
+    format1 = f.add_format({
+        'bold': True, 'font_color': 'black', 'font_size': 15, 'align': 'center', 'font_name': '宋体'
+    })
+    # 内容格式
+    format2 = f.add_format({'font_color': 'black', 'font_size': 12, 'align': 'center', 'font_name': '宋体'})
+    format3 = f.add_format({'font_color': 'blue', 'font_size': 12, 'align': 'center', 'font_name': '宋体'})
+
+    # 设置A-K列 宽 20
+    fsheet.set_column("A:L", 20)
+    # 写入首行
+    for t in range(len(title)):
+        fsheet.write(0, t, title[t], format1)
+    # 写入数据
+    for i in range(len(all_dj_datas)):
+        wt_data = all_dj_datas[i]
+        for x in range(len(wt_data)):
+            # if wt_data[x] and x > 9:
+            #     fsheet.write_url(i + 1, x, wt_data[x], format3, string='点击查看')
+            # else:
+            #     fsheet.write(i + 1, x, wt_data[x], format2)
+            fsheet.write(i + 1, x, wt_data[x], format2)
+    f.close()
 
 
 if __name__ == '__main__':

@@ -69,7 +69,8 @@ class BrigadeModel(models.Model):
 class RoadDeviceModel(models.Model):
     road_type = models.CharField(max_length=40, choices=(
         ('wt', '违停'), ('dj', '电警'), ('bd', '变道抓拍'), ('cs', '超速'), ('xr', '礼让行人'),
-        ('md', '违法鸣笛'), ('wjl', '违禁令'), ('kk', '卡口'), ('jk', '高空监控')
+        ('md', '违法鸣笛'), ('wjl', '违禁令'), ('kk', '卡口'), ('jk', '高空监控'), ('nx', '逆行'), ('hcxx', '货车限行'),
+        ('kcxx', '客车限行'), ('led', "LED显示屏")
     ), verbose_name="设备类型")
     is_active = models.CharField(max_length=10, choices=(("正常", "正常"), ("待验收", "待验收"), ("无效", "无效")), default="正常",
                                  verbose_name="是否有效", blank=True, null=True)
@@ -97,12 +98,13 @@ class RoadDeviceModel(models.Model):
 
 class TerminalDeviceModel(models.Model):
     ip = models.CharField(max_length=30, verbose_name="IP地址")
-    username = models.CharField(max_length=20, verbose_name="用户名", blank=True, null=True, default="admin")
-    password = models.CharField(max_length=20, verbose_name="密码", blank=True, null=True, default="hik12345")
+    name = models.CharField(max_length=20, verbose_name="终端名称", null=True, blank=True)
+    username = models.CharField(max_length=10, verbose_name="用户名", blank=True, null=True, default="admin")
+    password = models.CharField(max_length=30, verbose_name="密码", blank=True, null=True, default="hik12345")
     server = models.ForeignKey(ServerModel, verbose_name="接入服务器", null=True, blank=True)
     road_device = models.ForeignKey(RoadDeviceModel, verbose_name="所属路口设备", null=True, blank=True)
     device_type = models.CharField(max_length=20, null=True, blank=True, verbose_name='规格型号')
-    device_company = models.CharField(max_length=20, null=True, blank=True, verbose_name='厂家',
+    device_company = models.CharField(max_length=2, null=True, blank=True, verbose_name='厂家',
                                       choices=(('hk', '海康'), ('kd', '科达'), ('dh', '大华')))
     device_type2 = models.CharField(max_length=20, choices=(("终端", "终端"), ("录像机", "录像机")), default="终端", verbose_name='类型')
     is_active = models.CharField(max_length=10, choices=(("正常", "正常"), ("待验收", "待验收"), ("无效", "无效")), default="正常",
@@ -111,6 +113,7 @@ class TerminalDeviceModel(models.Model):
     class Meta:
         verbose_name = '终端设备信息'
         verbose_name_plural = verbose_name
+        ordering = ('-id',)
 
     def __str__(self):
         return self.ip
@@ -129,7 +132,9 @@ wf_types = (('13443', '违反禁令标志'),
             ('13442', '载货汽车限行'),
             ('60112', '不系安全带'),
             ('10395', '违法停车'),
-            ('1352', '超速'))
+            ('1352', '超速'),
+            ('0', '卡口')
+            )
 
 
 class CameraDeviceModel(models.Model):
@@ -146,10 +151,12 @@ class CameraDeviceModel(models.Model):
     device_company = models.CharField(max_length=20, null=True, blank=True, verbose_name='厂家',
                                       choices=(('hk', '海康'), ('kd', '科达'), ('dh', '大华')))
     terminal = models.ForeignKey(TerminalDeviceModel, verbose_name="接入终端", null=True, blank=True)
+    device_path = models.CharField(max_length=50, null=True, blank=True, verbose_name='所属方向')
 
     class Meta:
         verbose_name = '摄像机设备信息'
         verbose_name_plural = verbose_name
+        ordering = ('-id',)
 
     def __str__(self):
         return self.ip
@@ -178,6 +185,9 @@ class LEDInfoModel(models.Model):
     device_company = models.CharField(max_length=30, null=True, blank=True, verbose_name='厂家')
     is_active = models.CharField(max_length=10, choices=(("正常", "正常"), ("待验收", "待验收"), ("无效", "无效")), default="正常",
                                  verbose_name="是否有效", blank=True, null=True)
+    width = models.CharField(max_length=10, null=True, blank=True, verbose_name='宽度')
+    height = models.CharField(max_length=10, null=True, blank=True, verbose_name='高度')
+    card = models.CharField(max_length=10, null=True, blank=True, verbose_name='控制卡')
 
     class Meta:
         verbose_name = 'LED屏信息表'

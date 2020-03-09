@@ -1,6 +1,10 @@
 from django.contrib import admin
 from .models import *
 from django.utils.safestring import mark_safe
+from datetime import datetime
+from devices_mgmt.settings import MEDIA_ROOT
+from apps.myutils.utils import export_2_excel
+from django.http import HttpResponse
 
 admin.site.site_title = "沙坪坝电子警察设备管理系统v1.0"
 
@@ -99,6 +103,67 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
     # 
     # img2.short_description = "现场照片"
 
+    # 添加动作
+    actions = ['export_excel']
+
+    def export_excel(self, request, queryset):
+        try:
+            now = datetime.now()
+            name = datetime.strftime(now, '%m-%d-%H-%M-%S')
+            filename = 'media/' + name + '.xlsx'
+            filename2 = MEDIA_ROOT + '/' + name + '.xlsx'
+            all_datas = list()
+            for obj in queryset:
+                c = CameraDeviceModel.objects.filter(road_device_id=obj.id)
+                c_list = list()
+                for i in c:
+                    c_list.append(i.ip)
+                t = TerminalDeviceModel.objects.filter(road_device_id=obj.id)
+                t_list = list()
+                for x in t:
+                    t_list.append(x.ip)
+                longitude = obj.longitude
+                latitude = obj.latitude
+                if longitude and latitude:
+                    lonlat = longitude + ", " + latitude
+                else:
+                    lonlat = ""
+                map_img = obj.map_img
+                img = obj.img
+                if map_img:
+                    map_img = "有"
+                else:
+                    map_img = "无"
+                if img:
+                    img = "有"
+                else:
+                    img = "无"
+                build_company = obj.build_company
+                if build_company:
+                    build_company = build_company.build_company
+                else:
+                    build_company = ""
+                data = [
+                    obj.address, obj.get_road_type_display(), obj.device_code, ', '.join(c_list),
+                    ', '.join(t_list), build_company, lonlat, obj.is_active, map_img, img
+                ]
+                all_datas.append(data)
+            # print(all_datas)
+
+            export_2_excel(all_datas, '导出内容', filename2)
+            url = "50.20.53.235:8888/" + filename
+            return HttpResponse(url)
+        except Exception as e:
+            return HttpResponse(str(e))
+
+    export_excel.short_description = "导出台账"
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
 
 class TerminalDeviceModelAdmin(admin.ModelAdmin):
     list_display = ('ip', 'device_company', 'device_type', 'server', 'road_device', 'device_type2')
@@ -110,8 +175,8 @@ class CameraDeviceModelAdmin(admin.ModelAdmin):
     list_display = (
         'ip', 'wf_type', 'device_company', 'device_type', 'server', 'terminal',
     )
-    search_fields = ['ip', 'device_type', 'wf_type', 'terminal']
-    list_filter = ('device_company', 'server', 'wf_type', 'is_active')
+    search_fields = ['ip', 'device_type', 'wf_type', 'terminal__ip']
+    list_filter = ('device_company', 'server', 'is_active')
 
 
 class LEDInfoModelAdmin(admin.ModelAdmin):

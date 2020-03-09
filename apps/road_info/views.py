@@ -134,10 +134,16 @@ class ExportView(View):
                     wf_type = ",".join(wf_type)
                 else:
                     wf_type = ""
+                username = c.username
+                if not username:
+                    username = ""
+                password = c.password
+                if not password:
+                    password = ""
                 camera_list.append({
                     "ip": c.ip,
                     "device_type": c.device_type,
-                    "username_pwd": c.username + "/" + c.password,
+                    "username_pwd": username + "/" + password,
                     "terminal": terminal,
                     "server": server,
                     "wf_type": wf_type
