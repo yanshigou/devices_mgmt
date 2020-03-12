@@ -122,6 +122,11 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
                 t_list = list()
                 for x in t:
                     t_list.append(x.ip)
+                l = LEDInfoModel.objects.filter(road_device_id=obj.id)
+                l_list = list()
+                for u in l:
+                    l_list.append(u.ip)
+
                 longitude = obj.longitude
                 latitude = obj.latitude
                 if longitude and latitude:
@@ -144,8 +149,8 @@ class RoadDeviceModelAdmin(admin.ModelAdmin):
                 else:
                     build_company = ""
                 data = [
-                    obj.address, obj.get_road_type_display(), obj.device_code, ', '.join(c_list),
-                    ', '.join(t_list), build_company, lonlat, obj.is_active, map_img, img
+                    obj.address, obj.get_road_type_display(), obj.road_code, obj.device_code, ', '.join(c_list),
+                    ', '.join(t_list), ', '.join(l_list), build_company, lonlat, obj.is_active, map_img, img
                 ]
                 all_datas.append(data)
             # print(all_datas)

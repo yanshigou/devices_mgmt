@@ -624,7 +624,7 @@ def bd09_to_gcj02(bd_lon, bd_lat):
 def export_2_excel(all_dj_datas, sheet_info, filename):
     # print(all_wt_datas)
 
-    title = ['路口名称', '设备类型', '执法设备编号', '相机', '终端', '建设单位', '经纬度', '是否有效', '点位示意图', '现场照片']
+    title = ['路口名称', '设备类型', '档案编号', '执法设备编号', '相机', '终端', 'LED屏', '建设单位', '经纬度', '是否有效', '点位示意图', '现场照片']
 
     f = xlsxwriter.Workbook(filename)
     fsheet = f.add_worksheet(sheet_info)
